@@ -17,8 +17,7 @@ func (tunnel *Tunnel) RoutineReadFromUDP(queue int, max_enc int) {
 		pool[i].Mutex = sync.Mutex{}
 		pool[i].Lock()
 	}
-	var pos int = 0
-	var enc int = 0
+	var pos, enc int = 0, 0
 	for {
 		pkt := pool[pos % len(pool)]
 		size := tunnel.Receive(queue, pkt.buffer[:])

@@ -13,7 +13,7 @@ type Packet struct {
 }
 
 type Tunnel struct {
-	isClient  bool
+	client  bool
 
 	WG sync.WaitGroup
 	state struct {
@@ -39,17 +39,15 @@ type Tunnel struct {
 	}
 }
 
-func NewInstance(tunTunnel tun.Device, isClient bool, queues int) *Tunnel {
+func NewInstance(tunTunnel tun.Device, client bool, queues int) *Tunnel {
 	tunnel := new(Tunnel)
-
-	tunnel.isClient = isClient
-
+	tunnel.client = client
 	tunnel.tun.queues = queues
 	tunnel.tun.tunnel = tunTunnel
 	tunnel.net.port = 12346
 	tunnel.net.addr = [4]byte{192, 168, 56, 1}
 
-	if tunnel.isClient {
+	if tunnel.client {
 		tunnel.net.socket = CreateUDPScoket(tunnel.net.port, tunnel.net.addr, tunnel.tun.queues, 1)
 	} else {
 		tunnel.net.socket = CreateUDPScoket(tunnel.net.port, tunnel.net.addr, tunnel.tun.queues, 0)
