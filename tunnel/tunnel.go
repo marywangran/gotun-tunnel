@@ -47,7 +47,7 @@ func NewInstance(tunTunnel tun.Device, isClient bool, queues int) *Tunnel {
 	tunnel.tun.queues = queues
 	tunnel.tun.tunnel = tunTunnel
 	tunnel.net.port = 12346
-	tunnel.net.addr = [4]byte{10, 198, 54, 67}
+	tunnel.net.addr = [4]byte{192, 168, 56, 1}
 
 	if tunnel.isClient {
 		tunnel.net.socket = CreateUDPScoket(tunnel.net.port, tunnel.net.addr, tunnel.tun.queues, 1)

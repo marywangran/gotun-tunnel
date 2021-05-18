@@ -27,7 +27,7 @@ func main() {
 		queues, _ = strconv.Atoi(os.Args[2])
 	}
 	go func() {
-		log.Println(http.ListenAndServe("10.198.54.67:6061", nil))
+		log.Println(http.ListenAndServe("127.0.0.1:6061", nil))
 	}()
 
 	tun := func() (tun.Device) {
