@@ -1,7 +1,7 @@
 package tunnel
 
 import (
-//	"fmt"
+	//"fmt"
 	"sync"
 )
 
@@ -22,6 +22,7 @@ func (tunnel *Tunnel) RoutineReadFromTUN(index int, max_enc int) {
 		pkt := pool[pos % len(pool)]
 		size, _ := tunnel.tun.tunnel.Read(index, pkt.buffer[:])
 		pkt.packet = pkt.buffer[:size]
+		//fmt.Printf("####### read from tun:%d\n", index)
 		addToEncryptionBuffer(tunnel.queue.outbound[index], tunnel.queue.encryption[index][enc % max_enc], &pkt)
 		pos += 1
 		enc += 1
@@ -44,6 +45,7 @@ func (tunnel *Tunnel) RoutineWriteToUDP(index int) {
 	for {
 		pkt, _ := <-tunnel.queue.outbound[index]
 		pkt.Lock()
+		//fmt.Printf("####### Write to UDP:%d\n", index)
 		tunnel.Send(index, pkt.packet)
 	}
 }

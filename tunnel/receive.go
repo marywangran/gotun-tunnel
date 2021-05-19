@@ -20,6 +20,7 @@ func (tunnel *Tunnel) RoutineReadFromUDP(queue int, max_enc int) {
 	var pos, enc int = 0, 0
 	for {
 		pkt := pool[pos % len(pool)]
+		//fmt.Printf("####### Receive from UDP:%d\n", queue)
 		size := tunnel.Receive(queue, pkt.buffer[:])
 		if pkt.buffer[0] == 'H' {
 			continue
@@ -47,6 +48,7 @@ func (tunnel *Tunnel) RoutineWriteToTUN(index int) {
 	for {
 		pkt, _ := <-tunnel.queue.inbound[index]
 		pkt.Lock()
+		//fmt.Printf("####### Write to TUN:%d\n", index)
 		tunnel.tun.tunnel.Write(index, pkt.buffer[:len(pkt.packet)])
 	}
 }
