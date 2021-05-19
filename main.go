@@ -36,7 +36,7 @@ func main() {
 		addr = [4]byte{byte(ip1), byte(ip2), byte(ip3), byte(ip4)}
 		key, _ = strconv.Atoi(os.Args[7])
 	} else {
-		fmt.Println("./tuntap server|client(mode) 10(queues) 192 168 56 1(IP address)")
+		fmt.Println("./tuntap server|client(mode) 10(queues) 192 168 56 1(IP address) key(pre shared key)")
 		os.Exit(1)
 	}
 	go func() {
