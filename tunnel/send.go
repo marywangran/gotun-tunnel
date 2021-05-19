@@ -32,6 +32,9 @@ func (tunnel *Tunnel) RoutineEncryption(queue int, enc int) {
 	for {
 		pkt, _ := <-tunnel.queue.encryption[queue][enc]
 		// encrypt packet
+		for i := 0; i < len(pkt.packet); i += 1 {
+			pkt.packet[i] += 15
+		}
 		pkt.Unlock()
 	}
 }
