@@ -29,11 +29,12 @@ func (tunnel *Tunnel) RoutineReadFromTUN(index int, max_enc int) {
 }
 
 func (tunnel *Tunnel) RoutineEncryption(queue int, enc int) {
+	key := byte(tunnel.key)
 	for {
 		pkt, _ := <-tunnel.queue.encryption[queue][enc]
 		// encrypt packet
 		for i := 0; i < len(pkt.packet); i += 1 {
-			pkt.packet[i] += 15
+			pkt.packet[i] += key
 		}
 		pkt.Unlock()
 	}

@@ -14,38 +14,33 @@ type Packet struct {
 
 type Tunnel struct {
 	client  bool
-
-	WG sync.WaitGroup
-	state struct {
-		sync.Mutex
-	}
-
+	key	int
+	WG	sync.WaitGroup
 	net struct {
 		socket	*UDPScoket
 		port    int
 		addr    [4]byte
 	}
-
 	queue struct {
 		inbound []chan *Packet
 		outbound []chan *Packet
 		encryption [][]chan *Packet
 		decryption [][]chan *Packet
 	}
-
 	tun struct {
 		tunnel tun.Device
 		queues    int
 	}
 }
 
-func NewInstance(tunTunnel tun.Device, client bool, queues int) *Tunnel {
+func NewInstance(tunTunnel tun.Device, key int, addr [4]byte, client bool, queues int) *Tunnel {
 	tunnel := new(Tunnel)
 	tunnel.client = client
+	tunnel.key = key
 	tunnel.tun.queues = queues
 	tunnel.tun.tunnel = tunTunnel
 	tunnel.net.port = 12346
-	tunnel.net.addr = [4]byte{192, 168, 56, 1}
+	tunnel.net.addr = addr
 
 	if tunnel.client {
 		tunnel.net.socket = CreateUDPScoket(tunnel.net.port, tunnel.net.addr, tunnel.tun.queues, 1)

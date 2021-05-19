@@ -32,11 +32,12 @@ func (tunnel *Tunnel) RoutineReadFromUDP(queue int, max_enc int) {
 }
 
 func (tunnel *Tunnel) RoutineDecryption(queue int, enc int) {
+	key := byte(tunnel.key)
 	for {
 		pkt, _ := <-tunnel.queue.decryption[queue][enc]
 		// decrypt packet
 		for i := 0; i < len(pkt.packet); i += 1 {
-			pkt.packet[i] -= 15
+			pkt.packet[i] -= key
 		}
 		pkt.Unlock()
 	}
