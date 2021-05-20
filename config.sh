@@ -10,6 +10,5 @@ else
 	./tuntap server 4 192 168 56 1 35 &
 	ifconfig wg2 172.16.0.1/30
 fi
-ifconfig wg2 mtu 1470
-ifconfig wg2 txqueuelen 2000
+ifconfig wg2 mtu 1460 txqueuelen 2000
 

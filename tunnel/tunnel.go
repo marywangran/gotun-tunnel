@@ -52,20 +52,20 @@ func NewInstance(tunTunnel tun.Device, key int, addr [4]byte, client bool, queue
 	tunnel.queue.inbound = make([]chan *Packet, queues)
 
 	enc := runtime.NumCPU()/queues
-	if enc < 4 {
-		enc = 4
+	if enc < PortNum {
+		enc = PortNum
 	}
 	tunnel.queue.encryption = make([][]chan *Packet, queues)
 	tunnel.queue.decryption = make([][]chan *Packet, queues)
 
 	for i := 0; i < queues; i += 1 {
-		tunnel.queue.outbound[i] = make(chan *Packet, 15000)
-		tunnel.queue.inbound[i] = make(chan *Packet, 15000)
+		tunnel.queue.outbound[i] = make(chan *Packet, IOBufferLen)
+		tunnel.queue.inbound[i] = make(chan *Packet, IOBufferLen)
 		tunnel.queue.encryption[i] = make([]chan *Packet, enc)
 		tunnel.queue.decryption[i] = make([]chan *Packet, enc)
 		for j := 0; j < enc; j += 1 {
-			tunnel.queue.encryption[i][j] = make(chan *Packet, 8000)
-			tunnel.queue.decryption[i][j] = make(chan *Packet, 8000)
+			tunnel.queue.encryption[i][j] = make(chan *Packet, CryptionBufferLen)
+			tunnel.queue.decryption[i][j] = make(chan *Packet, CryptionBufferLen)
 			go tunnel.RoutineDecryption(i, j)
 			go tunnel.RoutineEncryption(i, j)
 		}

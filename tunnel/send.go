@@ -11,9 +11,9 @@ func addToEncryptionBuffer(outboundQueue chan *Packet, encryptionQueue chan *Pac
 }
 
 func (tunnel *Tunnel) RoutineReadFromTUN(queue int, max_enc int) {
-	pool := make([]Packet, 15000, 15000)
+	pool := make([]Packet, IOBufferLen, IOBufferLen)
 	for i := 0; i < len(pool); i += 1 {
-		pool[i].buffer = make([]byte, 2000, 2000)
+		pool[i].buffer = make([]byte, MaxPacketSzie, MaxPacketSzie)
 		pool[i].Mutex = sync.Mutex{}
 		pool[i].Lock()
 	}
