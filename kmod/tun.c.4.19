@@ -1085,7 +1085,7 @@ static netdev_tx_t tun_net_xmit(struct sk_buff *skb, struct net_device *dev)
 	int num = tun->numqueues / 2;
 
 	rcu_read_lock();
-	rw = rw ? num : (txq - txq % num);
+	rw = rw ? (rw == 1 ? num : 0) : (txq - txq % num);
 	tfile = rcu_dereference(tun->tfiles[rw + txq % num]);
 
 	/* Drop packet if interface is not attached */
