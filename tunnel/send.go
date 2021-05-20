@@ -1,7 +1,7 @@
 package tunnel
 
 import (
-	//"fmt"
+//	"fmt"
 	"sync"
 )
 
@@ -10,7 +10,7 @@ func addToEncryptionBuffer(outboundQueue chan *Packet, encryptionQueue chan *Pac
 	encryptionQueue <- pktent
 }
 
-func (tunnel *Tunnel) RoutineReadFromTUN(index int, max_enc int) {
+func (tunnel *Tunnel) RoutineReadFromTUN(queue int, max_enc int) {
 	pool := make([]Packet, 15000, 15000)
 	for i := 0; i < len(pool); i += 1 {
 		pool[i].buffer = make([]byte, 2000, 2000)
@@ -20,10 +20,10 @@ func (tunnel *Tunnel) RoutineReadFromTUN(index int, max_enc int) {
 	var pos, enc int = 0, 0
 	for {
 		pkt := pool[pos % len(pool)]
-		size, _ := tunnel.tun.tunnel.Read(index, pkt.buffer[:])
+		size, _ := tunnel.tun.tunnel.Read(queue, pkt.buffer[:])
 		pkt.packet = pkt.buffer[:size]
 		//fmt.Printf("####### read from tun:%d\n", index)
-		addToEncryptionBuffer(tunnel.queue.outbound[index], tunnel.queue.encryption[index][enc % max_enc], &pkt)
+		addToEncryptionBuffer(tunnel.queue.outbound[queue], tunnel.queue.encryption[queue][enc % max_enc], &pkt)
 		pos += 1
 		enc += 1
 	}

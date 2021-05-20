@@ -52,6 +52,9 @@ func NewInstance(tunTunnel tun.Device, key int, addr [4]byte, client bool, queue
 	tunnel.queue.inbound = make([]chan *Packet, queues)
 
 	enc := runtime.NumCPU()/queues
+	if enc < 4 {
+		enc = 4
+	}
 	tunnel.queue.encryption = make([][]chan *Packet, queues)
 	tunnel.queue.decryption = make([][]chan *Packet, queues)
 
